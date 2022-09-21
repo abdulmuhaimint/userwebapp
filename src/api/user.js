@@ -11,4 +11,6 @@ export const updateUser = () => {};
 
 export const deleteUser = () => {};
 
-export const createUser = () => {};
+export const createUser = (user) => {
+  return client.post("/users", user);
+};

@@ -5,29 +5,21 @@ import SingleUser from "./pages/SingleUser";
 
 import {
   BrowserRouter as Router,
+  Navigate,
   Route,
-  Switch,
-  Redirect,
+  Routes,
 } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
       <Router>
-        <Switch>
-          <Route exact path="/">
-            <Redirect to="/users" />
-          </Route>
-          <Route exact path="/users">
-            <Users />
-          </Route>
-          <Route exact path="/users/create">
-            <CreateUser />
-          </Route>
-          <Route exact path="/users/:id">
-            <SingleUser />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Navigate to="/users" />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/users/create" element={<CreateUser />} />
+          <Route path="/users/:id" element={<SingleUser />} />
+        </Routes>
       </Router>
     </div>
   );

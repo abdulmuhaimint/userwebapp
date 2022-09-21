@@ -8,9 +8,10 @@ function UserCard({
   statusMessage,
   isPublic,
   avatarUrl,
+  onClick
 }) {
   return (
-    <div className={classes.card}>
+    <div className={classes.card} onClick={onClick}>
       <div className={classes.col}>
         <div
           className={classes.dp}

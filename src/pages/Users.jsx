@@ -39,9 +39,16 @@ function Users() {
         }}
       >
         {users.map((user) => (
-          <UserCard {...user} key={user.id.toString()} />
+          <UserCard
+            {...user}
+            key={user.id.toString()}
+            onClick={() => {
+              console.log({ user });
+            }}
+          />
         ))}
       </div>
+      {/* Pagination component */}
       <div className={classes.container}>
         <div className={classes.leftArrow} onClick={() => setPage(0)}>
           {"<<"}

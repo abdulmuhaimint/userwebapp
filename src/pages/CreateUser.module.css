@@ -1,0 +1,36 @@
+.dp {
+  min-width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background-image: url("../assets/dp.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.formContainer {
+  padding: 2rem;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  gap: 5rem;
+}
+
+.formContainer input {
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  height: 2rem;
+  width: 100%;
+}
+
+.formContainer button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.formContainer form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
