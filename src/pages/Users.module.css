@@ -28,11 +28,12 @@
   text-align: center;
 }
 
-.leftArrow, .rightArrow {
+.leftArrow,
+.rightArrow {
   cursor: pointer;
 }
 
-.createButton{
+.createButton {
   padding: 1rem;
   background-color: black;
   color: white;
@@ -40,3 +41,23 @@
   margin-left: 1rem;
 }
 
+.filterContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  align-items: flex-end;
+}
+
+.filterContainer input,
+label,
+select {
+  height: 2rem;
+}
+
+.filterContainer label {
+  font-size: small;
+  padding: 0.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  background-color: white;
+}

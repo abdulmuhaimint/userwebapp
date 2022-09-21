@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
-import { fetchUsers } from "../api/user";
+import { fetchUsers, fetchUsersByName } from "../api/user";
 import UserCard from "../components/UserCard/UserCard";
 import classes from "./Users.module.css";
 import { useNavigate } from "react-router-dom";
+import { debounce } from "../helpers/helpers";
 
 let limit = 4;
 
@@ -12,19 +13,58 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
+  const [searchValue, setSearchValue] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState("asc");
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    (async () => {
-      const { data, headers } = await fetchUsers(page + 1, limit);
+  const searchHandler = useCallback(async () => {
+    try {
+      let res;
+
+      if (searchValue === "") {
+        res = await fetchUsers(page + 1, limit, sortBy, sortOrder);
+      } else {
+        res = await fetchUsersByName(
+          searchValue,
+          page + 1,
+          limit,
+          sortBy,
+          sortOrder
+        );
+      }
+
+      const { data, headers } = res;
+
       if (headers["x-total-count"]) {
         let total_count = headers["x-total-count"];
         let pagecount = Math.ceil(total_count / limit);
         setPageCount(pagecount);
       }
       setUsers(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [page, searchValue, sortBy, sortOrder]);
+
+  //search effect
+  useEffect(() => {
+    debounce(async () => {
+      setPage(0);
+      await searchHandler();
+      console.log("search effect called")
+    }, 300);
+  }, [searchValue]);
+
+  //rest effect
+
+  useEffect(() => {
+    (async () => {
+      await searchHandler();
+      console.log("rest effect called")
     })();
-  }, [page]);
+  }, [page, sortBy, sortOrder]);
 
   const handlePageClick = (event) => {
     setPage(event.selected);
@@ -32,7 +72,29 @@ function Users() {
 
   return (
     <div style={{ padding: "0rem 2rem" }}>
-      <h1 style={{ textAlign: "center" }}>Users</h1>
+      <h1 style={{ textAlign: "center", margin:"0.5rem" }}>Users</h1>
+      <div className={classes.filterContainer}>
+        <input
+          placeholder="Search by name"
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+        <label htmlFor="sortby">Sort by:</label>
+        <select
+          id="sortby"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+        >
+          <option value={"createdAt"}>createdAt</option>
+          <option value={"age"}>age</option>
+        </select>
+        <select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+        >
+          <option value={"asc"}>asc</option>
+          <option value={"desc"}>desc</option>
+        </select>
+      </div>
       <div
         style={{
           display: "flex",
@@ -54,7 +116,7 @@ function Users() {
       {/* Pagination component */}
       <div className={classes.container}>
         <div className={classes.leftArrow} onClick={() => setPage(0)}>
-          {"<<"}
+          {pageCount > 0 &&"<<"}
         </div>
         <ReactPaginate
           breakLabel="..."
@@ -73,7 +135,7 @@ function Users() {
             setPage(() => (pageCount > 0 ? pageCount - 1 : pageCount));
           }}
         >
-          {">>"}
+          {pageCount > 0 &&">>"}
           <Link to={"/users/create"} className={classes.createButton}>
             Create new user
           </Link>
