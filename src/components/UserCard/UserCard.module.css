@@ -1,0 +1,47 @@
+.card {
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  padding: 2rem;
+  position: relative;
+}
+
+.dp {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background-image: url("../../assets/dp.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  background-image: url("../../assets/icon.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  align-self: flex-end;
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+}
+
+.line {
+  width: 110%;
+  height: 2px;
+  background-color: brown;
+  transform: translateY(1rem) rotate(-45deg);
+}
+
+p{
+  font-size: small;
+}
