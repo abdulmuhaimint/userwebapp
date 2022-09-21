@@ -16,21 +16,25 @@ function CreateUser() {
     setMessage("");
     e.preventDefault();
     if (name && statusMessage && email && age && isPublic) {
-      const res = await createUser({
-        name,
-        statusMessage,
-        email,
-        age,
-        isPublic,
-        createdAt: new Date().toISOString(),
-      });
-      if (res.status === 201) {
-        setMessage("User created");
-        setTimeout(() => {
-          navigate(-1);
-        }, 2000);
-      } else {
-        setMessage("Error");
+      try {
+        const res = await createUser({
+          name,
+          statusMessage,
+          email,
+          age,
+          isPublic,
+          createdAt: new Date().toISOString(),
+        });
+        if (res.status === 201) {
+          setMessage("User created");
+          setTimeout(() => {
+            navigate(-1);
+          }, 2000);
+        } else {
+          setMessage("Error");
+        }
+      } catch (error) {
+        setMessage(error);
       }
     }
     return;
@@ -77,8 +81,14 @@ function CreateUser() {
             value={isPublic}
           />
           <br />
-          <button type="submit">Create</button>
-        </form>
+          <div style={{ alignSelf: "flex-end" }}>
+            <button type="button" onClick={() => navigate(-1)}>
+              Back
+            </button>
+            <button type="submit" style={{ marginLeft: "0.5rem" }}>
+              Create
+            </button>
+          </div>        </form>
       </div>
       <p>{message}</p>
     </div>

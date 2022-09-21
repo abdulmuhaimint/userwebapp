@@ -32,3 +32,11 @@
   cursor: pointer;
 }
 
+.createButton{
+  padding: 1rem;
+  background-color: black;
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+}
+

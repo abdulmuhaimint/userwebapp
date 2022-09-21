@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
 import { fetchUsers } from "../api/user";
 import UserCard from "../components/UserCard/UserCard";
 import classes from "./Users.module.css";
+import { useNavigate } from "react-router-dom";
 
 let limit = 4;
 
@@ -10,6 +12,7 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -43,7 +46,7 @@ function Users() {
             {...user}
             key={user.id.toString()}
             onClick={() => {
-              console.log({ user });
+              navigate(`/users/${user.id}`);
             }}
           />
         ))}
@@ -71,6 +74,9 @@ function Users() {
           }}
         >
           {">>"}
+          <Link to={"/users/create"} className={classes.createButton}>
+            Create new user
+          </Link>
         </div>
       </div>
     </div>
