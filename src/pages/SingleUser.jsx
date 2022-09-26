@@ -6,7 +6,7 @@ import {
   deleteUser,
   updateUser,
 } from "../redux/slices/usersSlice";
-import { getCurrentUser, setAge, setAvatarUrl, setEmail, setIsPublic, setMessage, setName, setStatusMessage } from "../redux/slices/currentUserSlice";
+import { getCurrentUser, setAge, setAvatarUrl, setCurrentUser, setCurrentUserDefault, setEmail, setIsPublic, setMessage, setName, setStatusMessage } from "../redux/slices/currentUserSlice";
 
 function User() {
   const name = useSelector((state) => state.currentUser.name);
@@ -29,6 +29,7 @@ function User() {
     (async () => {
       try {
         if (!userId) return;
+        dispatch(setCurrentUserDefault())
         dispatch(getCurrentUser(userId));
       } catch (error) {
         dispatch(setMessage(error));

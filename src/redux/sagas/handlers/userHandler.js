@@ -26,6 +26,7 @@ export function* handleCreateUser(action) {
     yield put(setLoading(true));
     yield call(createUser, action.payload);
     yield put(setLoading(false));
+    yield call(action.meta.cb);
   } catch (error) {
     console.log(error);
   }

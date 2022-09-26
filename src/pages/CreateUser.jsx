@@ -1,43 +1,51 @@
 import React, { useState } from "react";
-import { createUser } from "../api/user";
 import classes from "./CreateUser.module.css";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setAge,
+  setEmail,
+  setIsPublic,
+  setMessage,
+  setName,
+  setStatusMessage,
+} from "../redux/slices/createUserSlice";
+import { createUser } from "../redux/slices/usersSlice";
 
 function CreateUser() {
-  const [name, setName] = useState("");
-  const [statusMessage, setStatusMessage] = useState("");
-  const [email, setEmail] = useState("");
-  const [age, setAge] = useState("");
-  const [isPublic, setIsPublic] = useState("");
-  const [message, setMessage] = useState("");
+  const name = useSelector((state) => state.createUser.name);
+  const statusMessage = useSelector((state) => state.createUser.statusMessage);
+  const email = useSelector((state) => state.createUser.email);
+  const age = useSelector((state) => state.createUser.age);
+  const isPublic = useSelector((state) => state.createUser.isPublic);
+  const message = useSelector((state) => state.createUser.message);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
-    setMessage("");
     e.preventDefault();
-    if (name && statusMessage && email && age && isPublic) {
-      try {
-        const res = await createUser({
-          name,
-          statusMessage,
-          email,
-          age,
-          isPublic,
-          createdAt: new Date().toISOString(),
-        });
-        if (res.status === 201) {
-          setMessage("User created");
-          setTimeout(() => {
+    dispatch(setMessage(""));
+    let user = {
+      name,
+      statusMessage,
+      email,
+      age,
+      isPublic,
+      createdAt: new Date().toISOString(),
+    };
+    try {
+      dispatch({
+        ...createUser(user),
+        meta: {
+          cb: () => {
             navigate(-1);
-          }, 2000);
-        } else {
-          setMessage("Error");
-        }
-      } catch (error) {
-        setMessage(error);
-      }
+          },
+        },
+      });
+    } catch (error) {
+      setMessage(error);
     }
-    return;
   };
 
   return (
@@ -49,35 +57,35 @@ function CreateUser() {
           <input
             id="name"
             placeholder="name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => dispatch(setName(e.target.value))}
             value={name}
           />
           <br />
           <input
             id="statusMessage"
             placeholder="status message"
-            onChange={(e) => setStatusMessage(e.target.value)}
+            onChange={(e) => dispatch(setStatusMessage(e.target.value))}
             value={statusMessage}
           />
           <br />
           <input
             id="email"
             placeholder="email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => dispatch(setEmail(e.target.value))}
             value={email}
           />
           <br />
           <input
             id="age"
             placeholder="age"
-            onChange={(e) => setAge(e.target.value)}
+            onChange={(e) => dispatch(setAge(e.target.value))}
             value={age}
           />
           <br />
           <input
             id="isPublic"
             placeholder="isPublic : true | false"
-            onChange={(e) => setIsPublic(e.target.value)}
+            onChange={(e) => dispatch(setIsPublic(e.target.value))}
             value={isPublic}
           />
           <br />
@@ -88,7 +96,8 @@ function CreateUser() {
             <button type="submit" style={{ marginLeft: "0.5rem" }}>
               Create
             </button>
-          </div>        </form>
+          </div>{" "}
+        </form>
       </div>
       <p>{message}</p>
     </div>

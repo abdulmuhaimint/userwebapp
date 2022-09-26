@@ -49,6 +49,7 @@ export const currentUserSlice = createSlice({
       state.statusMessage = action.payload.statusMessage;
     },
     getCurrentUser: () => {},
+    setCurrentUserDefault: () => initialState,
   },
 });
 
@@ -62,7 +63,8 @@ export const {
   setName,
   setStatusMessage,
   getCurrentUser,
-  setCurrentUser
+  setCurrentUser,
+  setCurrentUserDefault
 } = currentUserSlice.actions;
 
 export default currentUserSlice.reducer;
