@@ -9,6 +9,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -21,6 +22,17 @@ function App() {
           <Route path="/users/:id" element={<SingleUser />} />
         </Routes>
       </Router>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

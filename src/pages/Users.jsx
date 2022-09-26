@@ -6,6 +6,7 @@ import UserCard from "../components/UserCard/UserCard";
 import classes from "./Users.module.css";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "../helpers/helpers";
+import { useForm } from "react-hook-form";
 
 let limit = 4;
 
@@ -16,6 +17,8 @@ function Users() {
   const [searchValue, setSearchValue] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState("asc");
+  
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
   const navigate = useNavigate();
 
@@ -53,7 +56,6 @@ function Users() {
     debounce(async () => {
       setPage(0);
       await searchHandler();
-      console.log("search effect called")
     }, 300);
   }, [searchValue]);
 
@@ -62,7 +64,6 @@ function Users() {
   useEffect(() => {
     (async () => {
       await searchHandler();
-      console.log("rest effect called")
     })();
   }, [page, sortBy, sortOrder]);
 

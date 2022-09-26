@@ -9,7 +9,6 @@ import userReducer from "./slices/userSlice";
 const sagaMiddleware = createSagaMiddleware();
 
 const reducer = combineReducers({
-  counter: counterReducer,
   user: userReducer,
 });
 
