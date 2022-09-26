@@ -1,13 +1,13 @@
 import { call, put, select } from "redux-saga/effects";
+import { setCurrentUser, setMessage } from "../../slices/currentUserSlice";
 
 //actions
 import {
-  setCurrentUser,
   setError,
   setLoading,
   setTotalPages,
   setUsers,
-} from "../../slices/userSlice";
+} from "../../slices/usersSlice";
 
 //api reuests
 import {
@@ -35,8 +35,9 @@ export function* handleDeleteUser(action) {
   try {
     yield put(setLoading(true));
     yield call(deleteUser, action.payload);
-    yield put(action.navigate("/users"));
+    yield put(setCurrentUser({}))
     yield put(setLoading(false));
+    yield call(action.meta.cb);
   } catch (error) {
     console.log(error);
     yield put(setError(true));
@@ -48,6 +49,7 @@ export function* handleUpdateUser(action) {
     yield put(setError(false));
     yield put(setLoading(true));
     yield call(updateUser, action.payload);
+    yield put(setMessage("User updated"));
     yield put(setLoading(false));
   } catch (error) {
     console.log(error);
@@ -61,7 +63,7 @@ export function* handleFetchUsers(action) {
     const { data, headers } = response;
     if (headers["x-total-count"]) {
       let total_count = headers["x-total-count"];
-      let limit = yield select((state) => state.user.limit);
+      let limit = yield select((state) => state.users.limit);
       let pagecount = Math.ceil(total_count / limit);
       yield put(setTotalPages(pagecount));
     }
@@ -87,7 +89,7 @@ export function* handleFetchUsersByName(action) {
     const { data, headers } = response;
     if (headers["x-total-count"]) {
       let total_count = headers["x-total-count"];
-      let limit = yield select((state) => state.user.limit);
+      let limit = yield select((state) => state.users.limit);
       let pagecount = Math.ceil(total_count / limit);
       yield put(setTotalPages(pagecount));
     }

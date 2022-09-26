@@ -14,16 +14,16 @@ import {
   setSearchValue,
   setSortBy,
   setSortOrder,
-} from "../redux/slices/userSlice";
+} from "../redux/slices/usersSlice";
 
 function Users() {
-  const limit = useSelector((state) => state.user.limit);
-  const users = useSelector((state) => state.user.users);
-  const page = useSelector((state) => state.user.page);
-  const pageCount = useSelector((state) => state.user.totalPages);
-  const sortBy = useSelector((state) => state.user.sortBy);
-  const sortOrder = useSelector((state) => state.user.sortOrder);
-  const searchValue = useSelector((state) => state.user.searchValue);
+  const limit = useSelector((state) => state.users.limit);
+  const users = useSelector((state) => state.users.users);
+  const page = useSelector((state) => state.users.page);
+  const pageCount = useSelector((state) => state.users.totalPages);
+  const sortBy = useSelector((state) => state.users.sortBy);
+  const sortOrder = useSelector((state) => state.users.sortOrder);
+  const searchValue = useSelector((state) => state.users.searchValue);
 
   const dispatch = useDispatch();
 

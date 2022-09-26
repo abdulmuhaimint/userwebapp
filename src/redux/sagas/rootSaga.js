@@ -15,10 +15,10 @@ import {
   createUser,
   updateUser,
   deleteUser,
-  getCurrentUser,
   getUsers,
   getUsersByName,
-} from "../slices/userSlice";
+} from "../slices/usersSlice";
+import { getCurrentUser } from "../slices/currentUserSlice";
 
 export function* watcherSaga() {
   //watch each action here

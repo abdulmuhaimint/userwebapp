@@ -1,15 +1,14 @@
-import {
-  configureStore,
-  combineReducers,
-} from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import { watcherSaga } from "./sagas/rootSaga";
-import userReducer from "./slices/userSlice";
+import usersReducer from "./slices/usersSlice";
+import currentUserReducer from "./slices/currentUserSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const reducer = combineReducers({
-  user: userReducer,
+  users: usersReducer,
+  currentUser: currentUserReducer,
 });
 
 const store = configureStore({

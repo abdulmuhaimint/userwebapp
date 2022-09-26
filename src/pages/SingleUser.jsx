@@ -1,45 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { deleteUser, fetchSingleUser, updateUser } from "../api/user";
+import React, { useEffect } from "react";
 import classes from "./CreateUser.module.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteUser,
+  updateUser,
+} from "../redux/slices/usersSlice";
+import { getCurrentUser, setAge, setAvatarUrl, setEmail, setIsPublic, setMessage, setName, setStatusMessage } from "../redux/slices/currentUserSlice";
 
 function User() {
-  const [name, setName] = useState("");
-  const [statusMessage, setStatusMessage] = useState("");
-  const [email, setEmail] = useState("");
-  const [age, setAge] = useState("");
-  const [isPublic, setIsPublic] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [message, setMessage] = useState("");
-  const [createdAt, setCreatedAt] = useState("");
+  const name = useSelector((state) => state.currentUser.name);
+  const statusMessage = useSelector((state) => state.currentUser.statusMessage);
+  const email = useSelector((state) => state.currentUser.email);
+  const age = useSelector((state) => state.currentUser.age);
+  const isPublic = useSelector((state) => state.currentUser.isPublic);
+  const avatarUrl = useSelector((state) => state.currentUser.avatarUrl);
+  const message = useSelector((state) => state.currentUser.message);
+  const createdAt = useSelector((state) => state.currentUser.createdAt);
 
   const navigate = useNavigate();
   const { id: userId } = useParams();
 
+  const dispatch = useDispatch();
+
   //fetch user details on mount
   useEffect(() => {
+    dispatch(setMessage(""));
     (async () => {
       try {
         if (!userId) return;
-        const { data } = await fetchSingleUser(userId);
-        setName(data.name);
-        setAvatarUrl(data.avatarUrl);
-        setAge(data.age);
-        setEmail(data.email);
-        setIsPublic(data.isPublic);
-        setStatusMessage(data.statusMessage);
-        setCreatedAt(data.createdAt);
+        dispatch(getCurrentUser(userId));
       } catch (error) {
-        setMessage(error);
+        dispatch(setMessage(error));
       }
     })();
-  }, [userId]);
+  }, [userId, dispatch]);
 
   const handleSubmit = async (e) => {
-    setMessage("");
     e.preventDefault();
-    if (name && statusMessage && email && age && isPublic) {
-      const res = await updateUser({
+    dispatch(setMessage(""));
+
+    dispatch(
+      updateUser({
         name,
         statusMessage,
         email,
@@ -48,14 +50,8 @@ function User() {
         avatarUrl,
         id: userId,
         createdAt,
-      });
-      if (res.status === 200) {
-        setMessage("User updated");
-      } else {
-        setMessage("Error");
-      }
-    }
-    return;
+      })
+    );
   };
 
   const handleDelete = async () => {
@@ -63,10 +59,9 @@ function User() {
     if (!confirm) return;
 
     try {
-      await deleteUser(userId);
-      navigate(-1);
+      dispatch({ ...deleteUser(userId), meta: { cb: () => navigate(-1) } });
     } catch (error) {
-      setMessage(error);
+      dispatch(setMessage(error));
     }
   };
 
@@ -82,42 +77,42 @@ function User() {
           <input
             id="name"
             placeholder="name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => dispatch(setName(e.target.value))}
             value={name}
           />
           <br />
           <input
             id="statusMessage"
             placeholder="status message"
-            onChange={(e) => setStatusMessage(e.target.value)}
+            onChange={(e) => dispatch(setStatusMessage(e.target.value))}
             value={statusMessage}
           />
           <br />
           <input
             id="email"
             placeholder="email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => dispatch(setEmail(e.target.value))}
             value={email}
           />
           <br />
           <input
             id="age"
             placeholder="age"
-            onChange={(e) => setAge(e.target.value)}
+            onChange={(e) => dispatch(setAge(e.target.value))}
             value={age}
           />
           <br />
           <input
             id="isPublic"
             placeholder="isPublic : true | false"
-            onChange={(e) => setIsPublic(e.target.value)}
+            onChange={(e) => dispatch(setIsPublic(e.target.value))}
             value={isPublic}
           />
           <br />
           <input
             id="avatarUrl"
             placeholder="avatar url"
-            onChange={(e) => setAvatarUrl(e.target.value)}
+            onChange={(e) => dispatch(setAvatarUrl(e.target.value))}
             value={avatarUrl}
           />
           <br />

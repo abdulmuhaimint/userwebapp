@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   users: [],
-  currentUser: undefined,
   page: 0,
   totalPages: 0,
   searchValue: "",
@@ -14,7 +13,7 @@ const initialState = {
 };
 
 export const userSlice = createSlice({
-  name: "user",
+  name: "users",
   initialState,
   reducers: {
     setUsers: (state, action) => {
@@ -22,10 +21,6 @@ export const userSlice = createSlice({
     },
     getUsers: () => {},
     getUsersByName : ()=>{},
-    setCurrentUser: (state, action) => {
-      state.currentUser = action.payload;
-    },
-    getCurrentUser: () => {},
     createUser: () => {},
     updateUser: () => {},
     deleteUser: () => {},
@@ -54,14 +49,12 @@ export const userSlice = createSlice({
 });
 
 export const {
-  setCurrentUser,
   setUsers,
   setPage,
   setSearchValue,
   setSortBy,
   setSortOrder,
   setTotalPages,
-  getCurrentUser,
   getUsers,
   getUsersByName,
   createUser,
