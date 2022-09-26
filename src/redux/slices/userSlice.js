@@ -5,11 +5,12 @@ const initialState = {
   currentUser: undefined,
   page: 0,
   totalPages: 0,
-  searchValue: 0,
+  searchValue: "",
   sortBy: "createdAt",
   sortOrder: "asc",
   loading: false,
   error: false,
+  limit:4
 };
 
 export const userSlice = createSlice({
@@ -20,6 +21,7 @@ export const userSlice = createSlice({
       state.users = action.payload;
     },
     getUsers: () => {},
+    getUsersByName : ()=>{},
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
     },
@@ -61,6 +63,7 @@ export const {
   setTotalPages,
   getCurrentUser,
   getUsers,
+  getUsersByName,
   createUser,
   deleteUser,
   updateUser,

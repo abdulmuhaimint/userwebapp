@@ -4,14 +4,14 @@ const client = axios.create({
   baseURL: "http://localhost:3333",
 });
 
-export const fetchUsers = (
-  page,
-  limit,
-  sortBy = "createdAt",
-  sortOrder = "asc"
-) => {
+export const fetchUsers = (options) => {
   return client.get("/users", {
-    params: { _page: page, _limit: limit, _sort: sortBy, _order: sortOrder },
+    params: {
+      _page: options.page,
+      _limit: options.limit,
+      _sort: options.sortBy,
+      _order: options.sortOrder,
+    },
   });
 };
 
@@ -31,20 +31,14 @@ export const createUser = (user) => {
   return client.post("/users", user);
 };
 
-export const fetchUsersByName = (
-  searchValue,
-  page,
-  limit,
-  sortBy = "createdAt",
-  sortOrder = "asc"
-) => {
+export const fetchUsersByName = (options) => {
   return client.get("/users", {
     params: {
-      _page: page,
-      _limit: limit,
-      name_like: searchValue,
-      _sort: sortBy,
-      _order: sortOrder,
+      _page: options.page,
+      _limit: options.limit,
+      name_like: options.searchValue,
+      _sort: options.sortBy,
+      _order: options.sortOrder,
     },
   });
 };

@@ -6,6 +6,7 @@ import {
   handleDeleteUser,
   handleFetchSingleUser,
   handleFetchUsers,
+  handleFetchUsersByName,
   handleUpdateUser,
 } from "./handlers/userHandler";
 
@@ -16,6 +17,7 @@ import {
   deleteUser,
   getCurrentUser,
   getUsers,
+  getUsersByName,
 } from "../slices/userSlice";
 
 export function* watcherSaga() {
@@ -25,4 +27,6 @@ export function* watcherSaga() {
   yield takeLatest(deleteUser.type, handleDeleteUser);
   yield takeLatest(getCurrentUser.type, handleFetchSingleUser);
   yield takeLatest(getUsers.type, handleFetchUsers);
+  yield takeLatest(getUsersByName.type, handleFetchUsersByName);
+
 }

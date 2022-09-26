@@ -1,63 +1,62 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
-import { fetchUsers, fetchUsersByName } from "../api/user";
 import UserCard from "../components/UserCard/UserCard";
 import classes from "./Users.module.css";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "../helpers/helpers";
 import { useForm } from "react-hook-form";
-
-let limit = 4;
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getUsers,
+  getUsersByName,
+  setPage,
+  setSearchValue,
+  setSortBy,
+  setSortOrder,
+} from "../redux/slices/userSlice";
 
 function Users() {
-  const [users, setUsers] = useState([]);
-  const [page, setPage] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
-  const [searchValue, setSearchValue] = useState("");
-  const [sortBy, setSortBy] = useState("createdAt");
-  const [sortOrder, setSortOrder] = useState("asc");
-  
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const limit = useSelector((state) => state.user.limit);
+  const users = useSelector((state) => state.user.users);
+  const page = useSelector((state) => state.user.page);
+  const pageCount = useSelector((state) => state.user.totalPages);
+  const sortBy = useSelector((state) => state.user.sortBy);
+  const sortOrder = useSelector((state) => state.user.sortOrder);
+  const searchValue = useSelector((state) => state.user.searchValue);
+
+  const dispatch = useDispatch();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
   const navigate = useNavigate();
 
   const searchHandler = useCallback(async () => {
     try {
-      let res;
-
       if (searchValue === "") {
-        res = await fetchUsers(page + 1, limit, sortBy, sortOrder);
+        dispatch(getUsers({ page, limit, sortBy, sortOrder }));
       } else {
-        res = await fetchUsersByName(
-          searchValue,
-          page + 1,
-          limit,
-          sortBy,
-          sortOrder
+        dispatch(
+          getUsersByName({ page, limit, sortBy, sortOrder, searchValue })
         );
       }
-
-      const { data, headers } = res;
-
-      if (headers["x-total-count"]) {
-        let total_count = headers["x-total-count"];
-        let pagecount = Math.ceil(total_count / limit);
-        setPageCount(pagecount);
-      }
-      setUsers(data);
     } catch (error) {
       console.log(error);
     }
-  }, [page, searchValue, sortBy, sortOrder]);
+  }, [page, searchValue, sortBy, sortOrder, dispatch, limit]);
 
   //search effect
   useEffect(() => {
     debounce(async () => {
-      setPage(0);
+      dispatch(setPage(0));
       await searchHandler();
     }, 300);
-  }, [searchValue]);
+  }, [searchValue, dispatch]);
 
   //rest effect
 
@@ -68,29 +67,29 @@ function Users() {
   }, [page, sortBy, sortOrder]);
 
   const handlePageClick = (event) => {
-    setPage(event.selected);
+    dispatch(setPage(event.selected));
   };
 
   return (
     <div style={{ padding: "0rem 2rem" }}>
-      <h1 style={{ textAlign: "center", margin:"0.5rem" }}>Users</h1>
+      <h1 style={{ textAlign: "center", margin: "0.5rem" }}>Users</h1>
       <div className={classes.filterContainer}>
         <input
           placeholder="Search by name"
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={(e) => dispatch(setSearchValue(e.target.value))}
         />
         <label htmlFor="sortby">Sort by:</label>
         <select
           id="sortby"
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
+          onChange={(e) => dispatch(setSortBy(e.target.value))}
         >
           <option value={"createdAt"}>createdAt</option>
           <option value={"age"}>age</option>
         </select>
         <select
           value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
+          onChange={(e) => dispatch(setSortOrder(e.target.value))}
         >
           <option value={"asc"}>asc</option>
           <option value={"desc"}>desc</option>
@@ -116,8 +115,8 @@ function Users() {
       </div>
       {/* Pagination component */}
       <div className={classes.container}>
-        <div className={classes.leftArrow} onClick={() => setPage(0)}>
-          {pageCount > 0 &&"<<"}
+        <div className={classes.leftArrow} onClick={() => dispatch(setPage(0))}>
+          {pageCount > 0 && "<<"}
         </div>
         <ReactPaginate
           breakLabel="..."
@@ -133,10 +132,12 @@ function Users() {
         <div
           className={classes.rightArrow}
           onClick={() => {
-            setPage(() => (pageCount > 0 ? pageCount - 1 : pageCount));
+            dispatch(
+              setPage(() => (pageCount > 0 ? pageCount - 1 : pageCount))
+            );
           }}
         >
-          {pageCount > 0 &&">>"}
+          {pageCount > 0 && ">>"}
           <Link to={"/users/create"} className={classes.createButton}>
             Create new user
           </Link>
